@@ -1,0 +1,12 @@
+{
+  "extName": { "message": "HoverPeDES - hover to preview" },
+  "extDesc": { "message": "Hover over any image or video on the web to preview it instantly. Plays any video format through the HoverPeDES desktop app." },
+  "optEnabled": { "message": "Enable hover preview" },
+  "optImages": { "message": "Preview images (in the page)" },
+  "optVideos": { "message": "Preview videos (needs HoverPeDES app)" },
+  "optSite": { "message": "Active on $HOST$", "placeholders": { "host": { "content": "$1", "example": "youtube.com" } } },
+  "optSiteNone": { "message": "Active on this site" },
+  "optDelay": { "message": "Hover delay" },
+  "statusOk": { "message": "Connected to the HoverPeDES app." },
+  "statusOff": { "message": "HoverPeDES app not found. Images still work; install and start the app to preview videos." }
+}

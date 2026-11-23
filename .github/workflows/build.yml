@@ -1,0 +1,94 @@
+name: build
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Work out version
+        id: v
+        shell: pwsh
+        run: |
+          if ($env:GITHUB_REF -like 'refs/tags/v*') { $ver = $env:GITHUB_REF_NAME.TrimStart('v') } else { $ver = '1.0.0' }
+          "version=$ver" >> $env:GITHUB_OUTPUT
+
+      - name: Publish app (self-contained, no .NET install needed on target PCs)
+        shell: pwsh
+        run: >
+          dotnet publish src/HoverPeDES/HoverPeDES.csproj -c Release -r win-x64
+          --self-contained true -p:Version=${{ steps.v.outputs.version }} -o publish
+
+      - name: Download libmpv (playback engine)
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          New-Item -ItemType Directory -Force mpv | Out-Null
+          gh release download --repo shinchiro/mpv-winbuild-cmake --pattern 'mpv-dev-lgpl-x86_64-2*.7z' --dir mpv --clobber
+          if (-not (Get-ChildItem mpv\*.7z -ErrorAction SilentlyContinue)) {
+            Write-Warning 'LGPL build not found, falling back to the standard build'
+            gh release download --repo shinchiro/mpv-winbuild-cmake --pattern 'mpv-dev-x86_64-2*.7z' --dir mpv --clobber
+          }
+          $archive = (Get-ChildItem mpv\*.7z | Select-Object -First 1).FullName
+          7z e $archive "-ompv\x" libmpv-2.dll -y
+          Copy-Item mpv\x\libmpv-2.dll publish\libmpv-2.dll
+
+      - name: Download yt-dlp (YouTube, TikTok, Vimeo ...)
+        shell: pwsh
+        run: Invoke-WebRequest https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp.exe -OutFile publish\yt-dlp.exe
+
+      - name: Vietnamese installer language file
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force installer\Languages | Out-Null
+          try {
+            Invoke-WebRequest https://raw.githubusercontent.com/jrsoftware/issrc/main/Files/Languages/Unofficial/Vietnamese.isl -OutFile installer\Languages\Vietnamese.isl
+          } catch {
+            Write-Warning 'Could not download Vietnamese.isl, falling back to English wizard text'
+            Copy-Item "${env:ProgramFiles(x86)}\Inno Setup 6\Default.isl" installer\Languages\Vietnamese.isl -ErrorAction SilentlyContinue
+          }
+
+      - name: Install Inno Setup
+        shell: pwsh
+        run: choco install innosetup -y --no-progress
+
+      - name: Build installer
+        shell: pwsh
+        run: |
+          if (-not (Test-Path installer\Languages\Vietnamese.isl)) {
+            Copy-Item "${env:ProgramFiles(x86)}\Inno Setup 6\Default.isl" installer\Languages\Vietnamese.isl
+          }
+          & "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe" "/DAppVersion=${{ steps.v.outputs.version }}" installer\HoverPeDES.iss
+
+      - name: Package extension and portable zip
+        shell: pwsh
+        run: |
+          $ver = '${{ steps.v.outputs.version }}'
+          Compress-Archive -Path extension\* -DestinationPath "dist\HoverPeDES-extension-$ver.zip" -Force
+          Compress-Archive -Path publish\* -DestinationPath "dist\HoverPeDES-portable-$ver.zip" -Force
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: HoverPeDES-${{ steps.v.outputs.version }}
+          path: dist/*
+
+      - name: Publish GitHub release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*
+          generate_release_notes: true

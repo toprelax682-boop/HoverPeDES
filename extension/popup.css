@@ -1,0 +1,22 @@
+:root {
+  --bg: #ffffff; --fg: #1d1d23; --muted: #6b6b76; --line: #e4e4ea; --accent: #5b5bf0;
+  --ok: #22a06b; --bad: #d9534f;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #1b1b21; --fg: #ececf1; --muted: #9a9aa6; --line: #2f2f38; --accent: #8b8bff; }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; padding: 14px 16px 16px; width: 300px; background: var(--bg); color: var(--fg);
+  font: 13px/1.4 system-ui, "Segoe UI", sans-serif;
+}
+header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+h1 { font-size: 16px; margin: 0; flex: 1; }
+.dot { width: 10px; height: 10px; border-radius: 50%; background: var(--bad); }
+.dot.ok { background: var(--ok); }
+.status { margin: 0 0 10px; color: var(--muted); font-size: 12px; }
+.row { display: flex; align-items: center; gap: 10px; padding: 7px 0; border-top: 1px solid var(--line); cursor: pointer; }
+.row input { accent-color: var(--accent); width: 16px; height: 16px; margin: 0; }
+.slider { display: grid; grid-template-columns: 1fr auto; gap: 4px 8px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 12px; }
+.slider input { grid-column: 1 / 2; accent-color: var(--accent); width: 100%; }
+.slider output { grid-column: 2 / 3; align-self: center; min-width: 52px; text-align: right; }

@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header>
+    <img src="icons/icon48.png" width="28" height="28" alt="">
+    <h1>HoverPeDES</h1>
+    <span id="dot" class="dot" title=""></span>
+  </header>
+
+  <p id="status" class="status"></p>
+
+  <label class="row"><input type="checkbox" id="enabled"><span data-i18n="optEnabled"></span></label>
+  <label class="row"><input type="checkbox" id="images"><span data-i18n="optImages"></span></label>
+  <label class="row"><input type="checkbox" id="videos"><span data-i18n="optVideos"></span></label>
+  <label class="row"><input type="checkbox" id="site"><span id="siteLabel"></span></label>
+
+  <div class="slider">
+    <span data-i18n="optDelay"></span>
+    <input type="range" id="delay" min="150" max="1500" step="50">
+    <output id="delayOut"></output>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+{
+  "extName": { "message": "HoverPeDES - rê chuột để xem trước" },
+  "extDesc": { "message": "Rê chuột vào ảnh hoặc video bất kỳ trên web để xem trước ngay. Phát mọi định dạng video qua ứng dụng HoverPeDES trên máy tính." },
+  "optEnabled": { "message": "Bật xem trước khi rê chuột" },
+  "optImages": { "message": "Xem trước ảnh (ngay trong trang)" },
+  "optVideos": { "message": "Xem trước video (cần ứng dụng HoverPeDES)" },
+  "optSite": { "message": "Hoạt động trên $HOST$", "placeholders": { "host": { "content": "$1", "example": "youtube.com" } } },
+  "optSiteNone": { "message": "Hoạt động trên trang này" },
+  "optDelay": { "message": "Độ trễ khi rê chuột" },
+  "statusOk": { "message": "Đã kết nối với ứng dụng HoverPeDES." },
+  "statusOff": { "message": "Không tìm thấy ứng dụng HoverPeDES. Ảnh vẫn xem được; hãy cài và chạy ứng dụng để xem trước video." }
+}
