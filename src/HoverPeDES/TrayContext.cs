@@ -14,7 +14,7 @@ internal sealed class TrayContext : ApplicationContext
     private readonly PreviewForm _preview = new();
     private readonly HoverWatcher _watcher = new();
     private readonly LocalServer _server = new();
-    private bool _warnedMpv;
+    private bool _warnedMpv, _warnedWebView;
 
     public TrayContext()
     {
@@ -24,6 +24,8 @@ internal sealed class TrayContext : ApplicationContext
         string ytdl = Path.Combine(AppContext.BaseDirectory, "yt-dlp.exe");
         if (File.Exists(ytdl)) _preview.YtdlPath = ytdl;
         _preview.MpvMissing += OnMpvMissing;
+        _preview.WebViewMissing += OnWebViewMissing;
+        _watcher.PreviewHwnd = _preview.Handle;
 
         _tray = new NotifyIcon
         {
@@ -136,6 +138,13 @@ internal sealed class TrayContext : ApplicationContext
             Process.Start(new ProcessStartInfo(Log.FilePath) { UseShellExecute = true });
         }
         catch { }
+    }
+
+    private void OnWebViewMissing()
+    {
+        if (_warnedWebView) return;
+        _warnedWebView = true;
+        MessageBox.Show(L.T("noWebView"), "HoverPeDES", MessageBoxButtons.OK, MessageBoxIcon.Information);
     }
 
     private void OnMpvMissing()

@@ -17,8 +17,9 @@
     });
   } catch (_) { /* extension reloaded; page needs refresh */ }
 
-  const VIDEO_EXT = /\.(mp4|m4v|webm|mkv|mov|avi|flv|wmv|ts|m2ts|m3u8|mpd|ogv|3gp|rmvb)$/i;
-  const IMAGE_EXT = /\.(jpe?g|png|gif|webp|avif|bmp|svg)$/i;
+  // Anything the desktop app (mpv/FFmpeg) can play: video, audio and image formats browsers cannot show.
+  const VIDEO_EXT = /\.(mp4|m4v|webm|mkv|mov|avi|flv|f4v|wmv|asf|ts|m2ts|mts|mpg|mpeg|vob|ogv|ogm|3gp|3g2|rm|rmvb|divx|mxf|m3u8|mpd|mp3|m4a|aac|flac|wav|ogg|oga|opus|wma|aiff|ape|mka|tif|tiff|heic|heif|jxl|jp2|tga|exr|hdr|dds)$/i;
+  const IMAGE_EXT = /\.(jpe?g|jfif|png|apng|gif|webp|avif|bmp|svg|ico)$/i;
 
   // Sites where a link reliably points to a single playable video (handled by yt-dlp).
   const VIDEO_SITES = [

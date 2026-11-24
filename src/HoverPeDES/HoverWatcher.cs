@@ -21,6 +21,10 @@ internal sealed class HoverWatcher : IDisposable
     private readonly Thread _thread;
     private volatile bool _run = true;
     private string? _current;
+    private const string Keep = "\0keep";
+
+    /// <summary>Handle of the preview window; hovering/clicking it keeps it open so documents can be scrolled.</summary>
+    public IntPtr PreviewHwnd { get; set; }
     private object? _shellObj;
 
     public HoverWatcher()
@@ -60,6 +64,7 @@ internal sealed class HoverWatcher : IDisposable
             // A click means "open it": hide and stay quiet until the mouse moves again.
             if ((Native.GetAsyncKeyState(0x01) & 0x8000) != 0)
             {
+                if (OverPreview(p)) continue;
                 Clear();
                 resolved = true;
                 continue;
@@ -74,6 +79,8 @@ internal sealed class HoverWatcher : IDisposable
             string? path = null;
             try { path = Resolve(p); }
             catch (Exception ex) { Log.Write(ex); }
+
+            if (path == Keep) continue;
 
             if (path == null)
             {
@@ -94,6 +101,13 @@ internal sealed class HoverWatcher : IDisposable
         Left?.Invoke();
     }
 
+    private bool OverPreview(Point p)
+    {
+        if (PreviewHwnd == IntPtr.Zero) return false;
+        IntPtr h = Native.WindowFromPoint(p);
+        return h != IntPtr.Zero && Native.GetAncestor(h, 2) == PreviewHwnd;
+    }
+
     // ---------------------------------------------------------------- resolution
 
     private string? Resolve(Point p)
@@ -102,6 +116,8 @@ internal sealed class HoverWatcher : IDisposable
         if (hwnd == IntPtr.Zero) return null;
         IntPtr root = Native.GetAncestor(hwnd, 2 /* GA_ROOT */);
         if (root == IntPtr.Zero) return null;
+
+        if (PreviewHwnd != IntPtr.Zero && root == PreviewHwnd) return Keep;
 
         string cls = Native.ClassName(root);
         bool explorer = cls == "CabinetWClass";

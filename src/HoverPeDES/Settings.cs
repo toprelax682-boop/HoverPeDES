@@ -8,8 +8,13 @@ namespace HoverPeDES;
 internal sealed class Settings
 {
     public bool Enabled { get; set; } = true;
-    public bool Mute { get; set; } = true;
+    public bool Mute { get; set; } = false;   // hover previews play with sound
     public bool PreviewImages { get; set; } = true;
+    public bool PreviewAudio { get; set; } = true;
+    public bool PreviewText { get; set; } = true;
+    public bool PreviewDocuments { get; set; } = true;   // PDF, SVG, Word, Excel, PowerPoint
+    public bool PreviewRaw { get; set; } = true;         // camera RAW photos
+    public string ExtraExtensions { get; set; } = "";   // e.g. ".xyz, .abc" - played by mpv
     public bool ExtensionEnabled { get; set; } = true;
     public bool StartWithWindows { get; set; } = false;
     public string Language { get; set; } = "auto";   // auto | en | vi
@@ -17,6 +22,8 @@ internal sealed class Settings
     public int Width { get; set; } = 480;
     public int StartPercent { get; set; } = 20;
     public int Volume { get; set; } = 60;
+    public int SettingsVersion { get; set; } = 0;
+    private const int CurrentVersion = 2;
 
     public static Settings Current { get; private set; } = new Settings();
     public static bool FirstRun { get; private set; }
@@ -28,14 +35,26 @@ internal sealed class Settings
 
     public static void Load()
     {
+        bool migrated = false;
         try
         {
             FirstRun = !File.Exists(FilePath);
             if (!FirstRun)
                 Current = JsonSerializer.Deserialize<Settings>(File.ReadAllText(FilePath)) ?? new Settings();
+            else
+                Current.SettingsVersion = CurrentVersion;
         }
         catch (Exception ex) { Log.Write(ex); Current = new Settings(); }
+
+        // Version 2: previews now play with sound by default, also for people who already have a settings file.
+        if (!FirstRun && Current.SettingsVersion < CurrentVersion)
+        {
+            Current.Mute = false;
+            Current.SettingsVersion = CurrentVersion;
+            migrated = true;
+        }
         Current.Clamp();
+        if (migrated) Current.Save();
     }
 
     public void Clamp()

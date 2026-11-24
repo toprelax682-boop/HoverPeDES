@@ -59,7 +59,7 @@ internal sealed class Mpv : IDisposable
         Opt("force-window", "yes");
         Opt("keep-open", "no");
         Opt("loop-file", "inf");
-        Opt("audio-display", "no");
+        Opt("audio-display", "embedded-first");
         Opt("image-display-duration", "inf");
         Opt("hr-seek", "no");               // fast keyframe seeking
         Opt("cache", "yes");

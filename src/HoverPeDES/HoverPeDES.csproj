@@ -21,6 +21,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <!-- Edge WebView2: shows PDF and SVG. The runtime itself ships with Windows 11 / current Edge. -->
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.*" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="Assets\hoverpedes.ico" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 

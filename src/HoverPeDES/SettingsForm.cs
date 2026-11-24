@@ -13,6 +13,11 @@ internal sealed class SettingsForm : Form
     private readonly NumericUpDown _volume = Num(0, 100, 5);
     private readonly CheckBox _mute = new() { AutoSize = true };
     private readonly CheckBox _images = new() { AutoSize = true };
+    private readonly CheckBox _audio = new() { AutoSize = true };
+    private readonly CheckBox _textPrev = new() { AutoSize = true };
+    private readonly CheckBox _docs = new() { AutoSize = true };
+    private readonly CheckBox _raw = new() { AutoSize = true };
+    private readonly TextBox _extra = new() { Width = 220 };
     private readonly CheckBox _ext = new() { AutoSize = true };
     private readonly CheckBox _auto = new() { AutoSize = true };
 
@@ -38,10 +43,19 @@ internal sealed class SettingsForm : Form
         _volume.Value = s.Volume;
         _mute.Checked = s.Mute;
         _images.Checked = s.PreviewImages;
+        _audio.Checked = s.PreviewAudio;
+        _textPrev.Checked = s.PreviewText;
+        _docs.Checked = s.PreviewDocuments;
+        _raw.Checked = s.PreviewRaw;
+        _extra.Text = s.ExtraExtensions ?? "";
         _ext.Checked = s.ExtensionEnabled;
         _auto.Checked = s.StartWithWindows;
         _mute.Text = L.T("mute");
         _images.Text = L.T("images");
+        _audio.Text = L.T("audio");
+        _textPrev.Text = L.T("text");
+        _docs.Text = L.T("docs");
+        _raw.Text = L.T("raw");
         _ext.Text = L.T("ext");
         _auto.Text = L.T("autostart");
 
@@ -59,6 +73,11 @@ internal sealed class SettingsForm : Form
         Row(t, L.T("volume"), _volume);
         Span(t, _mute);
         Span(t, _images);
+        Span(t, _audio);
+        Span(t, _textPrev);
+        Span(t, _docs);
+        Span(t, _raw);
+        Row(t, L.T("extra"), _extra);
         Span(t, _ext);
         Span(t, _auto);
 
@@ -111,6 +130,11 @@ internal sealed class SettingsForm : Form
         s.Volume = (int)_volume.Value;
         s.Mute = _mute.Checked;
         s.PreviewImages = _images.Checked;
+        s.PreviewAudio = _audio.Checked;
+        s.PreviewText = _textPrev.Checked;
+        s.PreviewDocuments = _docs.Checked;
+        s.PreviewRaw = _raw.Checked;
+        s.ExtraExtensions = _extra.Text.Trim();
         s.ExtensionEnabled = _ext.Checked;
         s.StartWithWindows = _auto.Checked;
         s.Save();

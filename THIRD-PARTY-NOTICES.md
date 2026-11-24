@@ -13,3 +13,9 @@ HoverPeDES's installer bundles these unmodified components. Each keeps its own l
 `libmpv-2.dll` is loaded dynamically as a separate file next to `HoverPeDES.exe`, so you can replace it with any compatible build. Source code for mpv and FFmpeg is available at the links above.
 
 If you redistribute HoverPeDES, keep this file and the license of each component with the package.
+
+Also used (not modified):
+
+| Component | Use | License |
+|---|---|---|
+| Microsoft Edge WebView2 SDK (`Microsoft.Web.WebView2` NuGet) | Shows PDF and SVG files | BSD-3-Clause (the WebView2 Runtime itself is a separate Microsoft component, not bundled) |
