@@ -114,7 +114,7 @@ internal sealed class PreviewForm : Form
     {
         if (origin != "explorer" || !File.Exists(source)) return ViewKind.Media;
         if (MediaTypes.IsVideo(source)) return ViewKind.Media;      // .ts is MPEG-TS video, not TypeScript
-        if (MediaTypes.IsRaw(source)) return ViewKind.Raw;
+        if (MediaTypes.IsRaw(source) || MediaTypes.IsPsd(source)) return ViewKind.Raw;
         if (MediaTypes.IsWebDoc(source)) return ViewKind.WebDoc;
         if (MediaTypes.IsOffice(source)) return ViewKind.Office;
         if (MediaTypes.IsText(source)) return ViewKind.Text;
@@ -268,7 +268,7 @@ internal sealed class PreviewForm : Form
     private async Task LoadRawAsync(string path, int token)
     {
         Bitmap? bmp = null;
-        try { bmp = await Task.Run(() => RawPreview.Load(path)); }
+        try { bmp = await Task.Run(() => MediaTypes.IsPsd(path) ? PsdPreview.Load(path) : RawPreview.Load(path)); }
         catch (Exception ex) { Log.Write(ex); }
 
         if (token != _loadToken) { bmp?.Dispose(); return; }

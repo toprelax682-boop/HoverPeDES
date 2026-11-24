@@ -33,7 +33,7 @@ Video và âm thanh phát **có tiếng** theo mặc định (tick **Tắt tiế
 - **Video DRM** (Netflix, Disney+, ...) không xem trước được.
 - **PDF và SVG** dùng Microsoft Edge WebView2 Runtime (có sẵn trên Windows 11 và Windows 10 đã cập nhật; nếu thiếu, app báo kèm link cài).
 - **Word, Excel, PowerPoint** (docx, xlsx, pptx, odt, ods, odp) chỉ hiện **văn bản** trích từ file, không có định dạng và hình ảnh. File cũ .doc, .xls, .ppt chưa hỗ trợ.
-- **Ảnh RAW** (CR2, NEF, ARW, DNG, ORF, RW2, RAF...) hiện ảnh JPEG xem trước nhúng sẵn trong file, không phải ảnh RAW đã xử lý. **PSD** cần được lưu với tùy chọn Maximize Compatibility.
+- **Ảnh RAW** (CR2, NEF, ARW, DNG, ORF, RW2, RAF...) hiện ảnh JPEG xem trước nhúng sẵn trong file, không phải ảnh RAW đã xử lý. **PSD** và **PSB** hiện ảnh đã gộp lớp (đọc trực tiếp nên nhanh cả với file nhiều GB); nếu file không có ảnh gộp (lưu không bật Maximize Compatibility) thì hiện ảnh thu nhỏ nhúng sẵn.
 - Định dạng lạ mà mpv phát được thì thêm đuôi vào **Cài đặt → Định dạng bổ sung**.
 - Video dạng `blob:` (nhiều trang tự dựng player) không lộ link thật nên không xem trước được; link tới trang video của các site được hỗ trợ thì được.
 - Video đang phát sẵn trong trang sẽ không bị xem trước chồng lên.
@@ -100,7 +100,7 @@ Windows SmartScreen may warn about an unknown publisher because the installer is
 
 ### Limitations
 
-DRM video (Netflix, Disney+ ...) cannot be previewed. PDF and SVG use the Microsoft Edge WebView2 Runtime (included in Windows 11 and up-to-date Windows 10; the app shows an install link if it is missing). Word, Excel and PowerPoint (docx, xlsx, pptx, odt, ods, odp) show the extracted **text only**, without layout or images; legacy .doc, .xls and .ppt are not supported. Camera RAW photos (CR2, NEF, ARW, DNG, ORF, RW2, RAF ...) show the full-size JPEG preview embedded in the file, not a developed RAW. PSD needs "Maximize Compatibility" when saved. For any odd format mpv can play, add its extension under **Settings → Extra file types**. `blob:` videos hide their real URL, so they cannot be previewed either (links to supported video pages work). Videos already playing in the page are not overlaid. Sites like YouTube/TikTok change often; update `yt-dlp.exe` in the install folder if one breaks. Windows 10/11 x64 and Chromium browsers only for now.
+DRM video (Netflix, Disney+ ...) cannot be previewed. PDF and SVG use the Microsoft Edge WebView2 Runtime (included in Windows 11 and up-to-date Windows 10; the app shows an install link if it is missing). Word, Excel and PowerPoint (docx, xlsx, pptx, odt, ods, odp) show the extracted **text only**, without layout or images; legacy .doc, .xls and .ppt are not supported. Camera RAW photos (CR2, NEF, ARW, DNG, ORF, RW2, RAF ...) show the full-size JPEG preview embedded in the file, not a developed RAW. PSD and PSB show the merged image, read directly so even multi-GB files are quick; if the file has no merged image (saved without Maximize Compatibility) the embedded thumbnail is shown. For any odd format mpv can play, add its extension under **Settings → Extra file types**. `blob:` videos hide their real URL, so they cannot be previewed either (links to supported video pages work). Videos already playing in the page are not overlaid. Sites like YouTube/TikTok change often; update `yt-dlp.exe` in the install folder if one breaks. Windows 10/11 x64 and Chromium browsers only for now.
 
 ### Build the .exe yourself
 

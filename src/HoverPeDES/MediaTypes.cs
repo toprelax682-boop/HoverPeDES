@@ -25,8 +25,10 @@ internal static class MediaTypes
     private static readonly HashSet<string> Image = Set(
         ".jpg", ".jpeg", ".jpe", ".jfif", ".png", ".apng", ".gif", ".webp", ".bmp", ".dib", ".avif", ".jxl",
         ".tif", ".tiff", ".heic", ".heif", ".ico", ".tga", ".pcx", ".pgm", ".ppm", ".pnm", ".pbm", ".exr", ".hdr",
-        ".dds", ".jp2", ".j2k", ".qoi",
-        ".psd");   // PSD: FFmpeg decodes the flattened image (needs "Maximize Compatibility" when saved)
+        ".dds", ".jp2", ".j2k", ".qoi");
+
+    // Photoshop: read directly (merged image or embedded thumbnail) so multi-GB files work.
+    private static readonly HashSet<string> Psd = Set(".psd", ".psb");
 
     // Shown as plain text (first ~48 KB / 80 lines).
     private static readonly HashSet<string> Text = Set(
@@ -90,6 +92,7 @@ internal static class MediaTypes
     public static bool IsPdf(string path) => string.Equals(ExtOf(path), ".pdf", StringComparison.OrdinalIgnoreCase);
     public static bool IsOffice(string path) => Office.Contains(ExtOf(path));
     public static bool IsRaw(string path) => Raw.Contains(ExtOf(path));
+    public static bool IsPsd(string path) => Psd.Contains(ExtOf(path));
 
     /// <summary>True when HoverPeDES should preview this local file.</summary>
     public static bool IsPreviewable(string path)
@@ -99,7 +102,7 @@ internal static class MediaTypes
         return Video.Contains(ext)
             || IsExtra(ext)
             || (s.PreviewAudio && Audio.Contains(ext))
-            || (s.PreviewImages && Image.Contains(ext))
+            || (s.PreviewImages && (Image.Contains(ext) || Psd.Contains(ext)))
             || (s.PreviewText && Text.Contains(ext))
             || (s.PreviewDocuments && (WebDoc.Contains(ext) || Office.Contains(ext)))
             || (s.PreviewRaw && Raw.Contains(ext));
